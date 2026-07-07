@@ -14,4 +14,5 @@ BEAM = {
 ENGINE = {
     "model_type": "pencil_beam", 
     "apply_etar": False, 
-    "etar_sigma": 1.0 }
+    "etar_sigma": 1.0
+}
