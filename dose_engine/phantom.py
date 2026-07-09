@@ -19,10 +19,10 @@ def tissue_insert(phantom, zi_cm, zf_cm, xi_cm, xf_cm, density):
     column_f = int(xf_cm / GRID["dx"])
 
     line_i = max(0, line_i)
-    line_f = max(GRID["nz"], line_f)
+    line_f = min(GRID["nz"], line_f)
 
     column_i = max(0, column_i)
-    column_f = max(GRID["nx"], column_f)
+    column_f = min(GRID["nx"], column_f)
 
     phantom[line_i : line_f, column_i: column_f] = density
 
