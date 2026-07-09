@@ -23,7 +23,8 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix):
 
     # TERMA
     im2 = axs[0,1].imshow(TERMA_matrix, cmap="magma", extent=extent, aspect="auto")
-    axs[0,1].imshow(im2, ax=axs[0,1], label="Intensity")
+    axs[0,1].set_title("TERMA")
+    fig.colorbar(im2, ax=axs[0,1], label="Intensity")
 
     # FINAL DOSE
     im3 = axs[1,0].imshow(dose_matrix, cmap="turbo", extent=extent, aspect="auto")
@@ -41,15 +42,15 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix):
     axs[1,1].axvspan(5.0, 15.0, color="gray", alpha=0.2, label="Lung")
 
     ax_secundary = axs[1,1].twiny()
-    ax_secundary.plt(x_axis, lateral_profile, color="blue", linewidth=2, linestyle="--", label="Lateral Profile (Z = 10 cm)")
+    ax_secundary.plot(x_axis, lateral_profile, color="blue", linewidth=2, linestyle="--", label="Lateral Profile (Z = 10 cm)")
 
     axs[1,1].set_title("Quantitative analysis (PDD and lateral profile")
     axs[1,1].set_xlabel("Depth Z (cm) [Red line]")
     ax_secundary.set_xlabel("Lateral X (cm) [Blue Line]")
     axs[1,1].grid(True, linestyle="--", alpha=0.6)
 
-    lines1, labels1 = axs[1,1].get_legend_handels_labels()
-    lines2, labels2 = ax_secundary.get_legend_handels_labels()
+    lines1, labels1 = axs[1,1].get_legend_handles_labels()
+    lines2, labels2 = ax_secundary.get_legend_handles_labels()
     axs[1,1].legend(lines1 + lines2, labels1 + labels2, loc="upper right")
 
     plt.show()
@@ -58,7 +59,7 @@ if __name__ == "__main__":
     print("Inicializing DoseEngine...")
 
     print("Generating anatomic phantom...")
-    pacient_lung = ph.create_lung
+    pacient_lung = ph.create_lung()
 
     print("Calculating primary transport (TERMA)...")
     engine_terma = DoseEngine(pacient_lung, model="simple")
