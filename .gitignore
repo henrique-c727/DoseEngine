@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+# DICOM and medical image data
+data/ct/*
+!data/ct/.gitkeep
+*.dcm
