@@ -17,7 +17,7 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix):
     fig.suptitle("DoseEngine v1.0 - Beam analysis (Pencil Beam)", fontsize=16, fontweight="bold")
 
     # CT
-    im1 = axs[0,0].imshow(density_matrix, cmap="bone", extent=extent, vmin=0, vmax=2.0, aspect="auto")
+    im1 = axs[0,0].imshow(density_matrix, cmap="bone", extent=extent, vmin=0, vmax=1.2, aspect="auto")
     axs[0,0].set_title("Effective density")
     fig.colorbar(im1, ax=axs[0,0], label="Relative density")
 
