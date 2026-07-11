@@ -16,11 +16,11 @@ def water_phantom():
 def tissue_insert(phantom, zi_cm, zf_cm, xi_cm, xf_cm, density):
 
 
-    line_i = int(zi_cm / GRID["dz"])
-    line_f = int(zf_cm / GRID["dz"])
+    line_i = int(np.round(zi_cm / GRID["dz"]))
+    line_f = int(np.round(zf_cm / GRID["dz"]))
 
-    column_i = int(xi_cm / GRID["dx"])
-    column_f = int(xf_cm / GRID["dx"])
+    column_i = int(np.round(xi_cm / GRID["dx"]))
+    column_f = int(np.round(xf_cm / GRID["dx"]))
 
     line_i = max(0, line_i)
     line_f = min(GRID["nz"], line_f)
