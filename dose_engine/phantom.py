@@ -1,6 +1,10 @@
 import numpy as np
 from config import GRID
 
+import pydicom
+from scipy.ndimage import zoom
+import os
+
 def water_phantom():
 
     lines = GRID["nz"]
@@ -28,6 +32,36 @@ def tissue_insert(phantom, zi_cm, zf_cm, xi_cm, xf_cm, density):
 
     return phantom
 
+
+def load_dicom_ct(filepath="slice.dcm"):
+    # Verificar se existe o ficheiro
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"DICOM file not found: {filepath}, please insert a valid filepath.")
+
+    # Ler o ficheiro
+    dicom_file = pydicom.dcmread(filepath)
+    pixels = dicom_file.pixel_array
+
+    # Convertercada pixel para Unidades de Hounsfield (HU)
+    intercept = dicom_file.RescaleIntercept
+    slope = dicom_file.RescaleSlope
+    hu_matrix = (pixels * slope) + intercept
+
+    # Calibração CT (HU -> densidade relativa) [água:0 -> 1.0; ar:-1000.0 -> 0.0; osso:1000.0 -> 2.0]
+    density_matrix = (hu_matrix/1000.0) + 1.0
+    density_matrix = np.clip(density_matrix, 0.0, 3.0) # valores sempre entre 0 e 3
+
+    # Redimensionar CT para a grelha configurada
+    lines_og, columns_og = density_matrix.shape
+    z_scale = GRID["nz"] / lines_og
+    x_scale = GRID["nx"] / columns_og
+
+    phantom_ct = zoom(density_matrix, (z_scale, x_scale))
+
+    return phantom_ct
+
+
+
 # Testes
 
 def create_lung():
@@ -43,6 +77,7 @@ def create_lung():
         )
     
     return phantom_lung
+
 
 def create_bone():
     phantom_bone = water_phantom()
