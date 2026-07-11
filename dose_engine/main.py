@@ -8,6 +8,9 @@ from config import GRID
 import phantom as ph
 from engine import DoseEngine
 
+import argparse
+
+
 def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix):
     width_cm = GRID["nx"] * GRID["dx"]
     depth_cm = GRID["nz"] * GRID["dz"]
@@ -59,24 +62,36 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix):
     plt.show()
 
 if __name__ == "__main__":
-    print("Inicializing DoseEngine...")
+
+    parser = argparse.ArgumentParser(description="DoseEngine")
+    parser.add_argument("--phantom", type=str, choices=["lung", "bone", "water"], default="lung", 
+                        help="Choose the anatomical feature (default: lung)")
+    
+    args = parser.parse_args()
+
+    print(f"Initializing DoseEngine for scenario: {args.phantom.upper()}...")
 
     print("Generating anatomic phantom...")
-    pacient_lung = ph.create_lung()
-    pacient_water = ph.water_phantom()
+    if args.phantom == "lung":
+        pacient = ph.create_lung()
+    elif args.phantom == "bone":
+        pacient = ph.create_bone()
+    elif args.phantom == "water":
+        pacient = ph.water_phantom()
+    
+    pacient_baseline = ph.water_phantom() # baseline
 
     print("Calculating primary transport (TERMA)...")
-    engine_terma = DoseEngine(pacient_lung, model="simple")
+    engine_terma = DoseEngine(pacient, model="simple")
     visual_terma = engine_terma.run()
 
-    print("Calculating secundary transport (Pencil Beam Model)...")
-    engine_dose = DoseEngine(pacient_lung, model="pencil_beam")
+    print("Calculating secundary transport (Heterogeneous)...")
+    engine_dose = DoseEngine(pacient, model="pencil_beam")
     final_dose = engine_dose.run()
 
     print("Calculating baseline transport (Homogeneous Water)...")
-    engine_water = DoseEngine(pacient_water, model="pencil_beam")
+    engine_water = DoseEngine(pacient_baseline, model="pencil_beam")
     water_dose = engine_water.run()
 
     print("Generating visualization elements...")
-    density_used = engine_dose.matrix_calculation
-    plot_results(density_used, visual_terma, final_dose,water_dose)
+    plot_results(pacient, visual_terma, final_dose, water_dose)
