@@ -11,7 +11,7 @@ from engine import DoseEngine
 import argparse
 
 
-def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix):
+def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix, phantom_type="lung"):
     width_cm = GRID["nx"] * GRID["dx"]
     depth_cm = GRID["nz"] * GRID["dz"]
     extent = [0, width_cm, depth_cm, 0]
@@ -45,7 +45,12 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix):
 
     axs[1,1].plot(z_axis, pdd_lung, color="red", linewidth=2, label="PDD (central axis)")
     axs[1,1].plot(z_axis, pdd_water, color="black", linewidth=1.5, linestyle="--", alpha=0.5, label="PDD (Baseline (Homogeneous/Water)")
-    axs[1,1].axvspan(5.0, 15.0, color="gray", alpha=0.2, label="Lung")
+    
+    if phantom_type == "lung":
+        axs[1,1].axvspan(5.0, 15.0, color="gray", alpha=0.2, label="Lung Region (0.3 $g/cm^3$)")
+    elif phantom_type == "bone":
+        axs[1,1].axvspan(10.0, 12.0, color="gray", alpha=0.2, label="Bone Region (1.8 $g/cm^3$)")
+
 
     ax_secundary = axs[1,1].twiny()
     ax_secundary.plot(x_axis, lateral_profile, color="blue", linewidth=2, linestyle="--", label="Lateral Profile (Z = 10 cm)")
@@ -101,4 +106,4 @@ if __name__ == "__main__":
     water_dose = engine_water.run()
 
     print("Generating visualization elements...")
-    plot_results(pacient, visual_terma, final_dose, water_dose)
+    plot_results(pacient, visual_terma, final_dose, water_dose, args.phantom)
