@@ -69,7 +69,7 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix, p
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="DoseEngine")
-    parser.add_argument("--phantom", type=str, choices=["lung", "bone", "water", "ct"], default="lung", 
+    parser.add_argument("--phantom", type=str, choices=["lung", "bone", "water", "ct", "custom"], default="lung", 
                         help="Choose anatomic feature (default: lung)")
 
     parser.add_argument("--ct_path", type=str, default="sample.dcm", 
@@ -90,7 +90,8 @@ if __name__ == "__main__":
 
         print(f"Reading DICOM file: {args.ct_path}")
         pacient = ph.load_dicom_ct(args.ct_path)
-        
+    elif args.phantom == "custom":
+        pacient = ph.create_custom()
     pacient_baseline = ph.water_phantom()
 
     print("Calculating primary transport (TERMA)...")
