@@ -22,7 +22,7 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix, p
     fig.suptitle("DoseEngine v1.0 - Beam analysis (Pencil Beam)", fontsize=16, fontweight="bold")
 
     # CT
-    im1 = axs[0,0].imshow(density_matrix, cmap="bone", extent=extent, vmin=0, vmax=1.2, aspect="auto")
+    im1 = axs[0,0].imshow(density_matrix, cmap="bone", extent=extent, vmin=0, vmax=2.5, aspect="auto")
     axs[0,0].set_title("Effective density")
     fig.colorbar(im1, ax=axs[0,0], label="Relative density")
 
@@ -45,8 +45,8 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix, p
 
     lateral_profile = dose_matrix[int(10 / GRID["dz"]), :]
 
-    axs[1,1].plot(z_axis, pdd_lung, color="red", linewidth=2, label="PDD (central axis)")
-    axs[1,1].plot(z_axis, pdd_water, color="black", linewidth=1.5, linestyle="--", alpha=0.5, label="PDD (Baseline (Homogeneous/Water)")
+    axs[1,1].plot(z_axis, pdd_lung, color="red", linewidth=2, label="Central-axis depth-dose profile")
+    axs[1,1].plot(z_axis, pdd_water, color="black", linewidth=1.5, linestyle="--", alpha=0.5, label="Water baseline depth-dose profile")
     
     if phantom_type == "lung":
         axs[1,1].axvspan(5.0, 15.0, color="gray", alpha=0.2, label="Lung Region (0.3 $g/cm^3$)")
