@@ -91,3 +91,17 @@ def create_bone():
         )
     
     return phantom_bone
+
+def create_custom():
+    my_phantom = water_phantom()
+    
+    # For example, a titanium mass
+    my_phantom = tissue_insert(
+        my_phantom,
+        zi_cm=8.0,
+        zf_cm=9.0,
+        xi_cm=0.0,
+        xf_cm=GRID["nx"] * GRID["dx"],
+        density=4.5
+    )
+    return my_phantom
