@@ -5,6 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from config import GRID
+import ct
+import density
 import phantom as ph
 from engine import DoseEngine
 
@@ -87,9 +89,14 @@ if __name__ == "__main__":
     elif args.phantom == "water":
         pacient = ph.water_phantom()
     elif args.phantom == "ct":
-
         print(f"Reading DICOM file: {args.ct_path}")
-        pacient = ph.load_dicom_ct(args.ct_path)
+        # DICOM -> HU
+        hu_matrix = ct.load_dicom_hu(args.ct_path)
+        # Adaptar a imagem à grelha do DoseEngine
+        hu_matrix = ct.resize_to_grid(hu_matrix)
+        # HU -> densidade relativa
+        pacient = density.hu_to_relative_density(hu_matrix)
+        
     elif args.phantom == "custom":
         pacient = ph.create_custom()
     pacient_baseline = ph.water_phantom()

@@ -1,10 +1,10 @@
-import numpy as np
-from scipy.signal import convolve2d
-from scipy.ndimage import gaussian_filter
+from config import ENGINE
 
-from config import GRID, ENGINE
-import physics
+import convolution
+import density
 import kernel
+import physics
+
 
 class DoseEngine:
 
@@ -12,38 +12,59 @@ class DoseEngine:
         self.phantom_matrix = phantom_matrix
         self.model = model
 
-    def apply_ETAR_filter(self, density_matrix):
+        # Guarda a matriz efetivamente utilizada no cálculo.
+        self.matrix_calculation = phantom_matrix
 
-        sigma_pixels = ENGINE["etar_sigma"] / GRID["dx"]
-
-        smooth_density = gaussian_filter(density_matrix, sigma=sigma_pixels)
-        return smooth_density
-    
     def run(self):
+        """
+        Executa o modelo físico selecionado e devolve uma matriz
+        bidimensional de TERMA ou dose relativa.
+        """
         if self.model == "simple":
-            d_eff = physics.calculate_radiologic_length(self.phantom_matrix)
+            self.matrix_calculation = self.phantom_matrix
+
+            d_eff = physics.calculate_radiologic_length(
+                self.matrix_calculation
+            )
+
             fluence = physics.calculate_primary_fluence(d_eff)
 
             return physics.calculate_TERMA(fluence)
-        
-        elif self.model == "pencil_beam":
 
+        elif self.model == "pencil_beam":
             self.matrix_calculation = self.phantom_matrix
 
-            d_eff = physics.calculate_radiologic_length(self.matrix_calculation)
+            # Correção qualitativa de heterogeneidade aplicada à densidade
+            if ENGINE["apply_etar"]:
+                self.matrix_calculation = density.apply_etar_filter(
+                    self.phantom_matrix,
+                    sigma_cm=ENGINE["etar_sigma"]
+                )
+
+            # Transporte primário
+            d_eff = physics.calculate_radiologic_length(
+                self.matrix_calculation
+            )
+
             fluence = physics.calculate_primary_fluence(d_eff)
             terma = physics.calculate_TERMA(fluence)
 
-            if ENGINE["apply_etar"]:
-                terma = self.apply_ETAR_filter(terma)
-
+            # Transporte secundário
             kernel_matrix = kernel.generate_kernel_2d()
-            dose = convolve2d(terma, kernel_matrix, mode="same", boundary="fill", fillvalue=0)
+
+            dose = convolution.convolve_terma(
+                terma,
+                kernel_matrix
+            )
 
             return dose
 
         elif self.model == "advanced":
-            raise NotImplementedError("Algoritmo AAA ainda não foi implementado.")
-        
+            raise NotImplementedError(
+                "O modelo avançado ainda não foi implementado."
+            )
+
         else:
-            raise ValueError(f"Modelo físico {self.model} não reconhecido.")
+            raise ValueError(
+                f"Modelo físico '{self.model}' não reconhecido."
+            )
