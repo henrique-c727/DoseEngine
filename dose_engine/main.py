@@ -8,7 +8,7 @@ from config import GRID
 import phantom as ph
 from engine import DoseEngine
 
-def plot_results(density_matrix, TERMA_matrix, dose_matrix):
+def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix):
     width_cm = GRID["nx"] * GRID["dx"]
     depth_cm = GRID["nz"] * GRID["dz"]
     extent = [0, width_cm, depth_cm, 0]
@@ -35,10 +35,13 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix):
     z_axis = np.arange(GRID["nz"]) * GRID["dz"]
     x_axis=np.arange(GRID["nx"]) * GRID["dx"]
 
-    pdd = dose_matrix[:, GRID["nx"] // 2] # midpoint of the lung
+    pdd_lung = dose_matrix[:, GRID["nx"] // 2] # midpoint of the lung
+    pdd_water = water_dose_matrix[:, GRID["nx"] // 2]
+
     lateral_profile = dose_matrix[int(10 / GRID["dz"]), :]
 
-    axs[1,1].plot(z_axis, pdd, color="red", linewidth=2, label="PDD (central axis)")
+    axs[1,1].plot(z_axis, pdd_lung, color="red", linewidth=2, label="PDD (central axis)")
+    axs[1,1].plot(z_axis, pdd_water, color="black", linewidth=1.5, linestyle="--", alpha=0.5, label="PDD (Baseline (Homogeneous/Water)")
     axs[1,1].axvspan(5.0, 15.0, color="gray", alpha=0.2, label="Lung")
 
     ax_secundary = axs[1,1].twiny()
@@ -60,6 +63,7 @@ if __name__ == "__main__":
 
     print("Generating anatomic phantom...")
     pacient_lung = ph.create_lung()
+    pacient_water = ph.water_phantom()
 
     print("Calculating primary transport (TERMA)...")
     engine_terma = DoseEngine(pacient_lung, model="simple")
@@ -69,6 +73,10 @@ if __name__ == "__main__":
     engine_dose = DoseEngine(pacient_lung, model="pencil_beam")
     final_dose = engine_dose.run()
 
+    print("Calculating baseline transport (Homogeneous Water)...")
+    engine_water = DoseEngine(pacient_water, model="pencil_beam")
+    water_dose = engine_water.run()
+
     print("Generating visualization elements...")
     density_used = engine_dose.matrix_calculation
-    plot_results(density_used, visual_terma, final_dose)
+    plot_results(density_used, visual_terma, final_dose,water_dose)
