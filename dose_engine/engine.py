@@ -22,17 +22,17 @@ class DoseEngine:
     def run(self):
         if self.model == "simple":
             d_eff = physics.calculate_radiologic_length(self.phantom_matrix)
-            fluency = physics.calculate_primary_fluency(d_eff)
+            fluence = physics.calculate_primary_fluence(d_eff)
 
-            return physics.calculate_TERMA(fluency)
+            return physics.calculate_TERMA(fluence)
         
         elif self.model == "pencil_beam":
 
             self.matrix_calculation = self.phantom_matrix
 
             d_eff = physics.calculate_radiologic_length(self.matrix_calculation)
-            fluency = physics.calculate_primary_fluency(d_eff)
-            terma = physics.calculate_TERMA(fluency)
+            fluence = physics.calculate_primary_fluence(d_eff)
+            terma = physics.calculate_TERMA(fluence)
 
             if ENGINE["apply_etar"]:
                 terma = self.apply_ETAR_filter(terma)

@@ -10,10 +10,10 @@ def calculate_radiologic_length(phantom):
 
     return d_eff
 
-def calculate_primary_fluency(d_eff):
+def calculate_primary_fluence(d_eff):
 
     lines, columns = d_eff.shape
-    fluency = np.zeros((lines, columns))
+    fluence = np.zeros((lines, columns))
 
     center_idx = columns // 2
     field_radius_pixels = int((BEAM["field_size_cm"] / 2.0) / GRID["dx"])
@@ -25,9 +25,9 @@ def calculate_primary_fluency(d_eff):
 
     for z in range(lines):
         attenuation = np.exp(-mu_water * d_eff[z, column_i:column_f])
-        fluency[z, column_i:column_f] = 1.0 * attenuation * isl[z]
+        fluence[z, column_i:column_f] = 1.0 * attenuation * isl[z]
 
-    return fluency
+    return fluence
 
-def calculate_TERMA(fluency):
-    return fluency * mu_water
+def calculate_TERMA(fluence):
+    return fluence * mu_water
