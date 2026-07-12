@@ -6,16 +6,27 @@ from config import GRID
 
 def hu_to_relative_density(hu_matrix):
     """
-    Converte Unidades de Hounsfield para densidade relativa através
-    de uma calibração linear simplificada.
+    Converts Hounsfield Units into relative density using a simplified
+    linear calibration.
 
-    Aproximações utilizadas:
-        HU = -1000  -> densidade relativa = 0.0
-        HU = 0      -> densidade relativa = 1.0
-        HU = 1000   -> densidade relativa = 2.0
+    The following reference points are assumed:
 
-    Esta relação é estritamente didática e não representa uma curva
-    de calibração clínica de um scanner CT.
+        HU = -1000  -> relative density = 0.0
+        HU = 0      -> relative density = 1.0
+        HU = 1000   -> relative density = 2.0
+
+    Parameters
+    ----------
+    hu_matrix: 2D CT matrix expressed in Hounsfield Units.
+
+    Returns
+    -------
+    2D relative density matrix.
+
+    Note
+    ----
+    This conversion is strictly educational and does not represent a
+    scanner-specific clinical CT calibration curve.
     """
     density_matrix = (hu_matrix / 1000.0) + 1.0
 
@@ -27,15 +38,21 @@ def hu_to_relative_density(hu_matrix):
 
 def apply_etar_filter(density_matrix, sigma_cm):
     """
-    Aplica uma média espacial gaussiana à matriz de densidade.
+    Applies Gaussian spatial smoothing to the relative density matrix.
 
-    Este operador constitui uma correção qualitativa inspirada no
-    princípio ETAR.
+    This operator is a heterogeneity correction inspired
+    by the use of effective local density in ETAR-related approaches.
+    It is not a direct implementation of the ETAR method.
 
-    
-    Retorna a matriz de densidade suavizada,
-    na tentativa de representar melhor os efeitos de dose em
-    heterogeneidades. 
+    Parameters
+    ----------
+    density_matrix: 2D relative density matrix.
+
+    sigma_cm: Standard deviation of the Gaussian filter, in centimeters.
+
+    Returns
+    -------
+    Spatially smoothed relative density matrix.
     """
     sigma_z_pixels = sigma_cm / GRID["dz"]
     sigma_x_pixels = sigma_cm / GRID["dx"]
