@@ -54,16 +54,16 @@ def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix, p
         axs[1,1].axvspan(10.0, 12.0, color="gray", alpha=0.2, label="Bone Region (1.8 $g/cm^3$)")
 
 
-    ax_secundary = axs[1,1].twiny()
-    ax_secundary.plot(x_axis, lateral_profile, color="blue", linewidth=2, linestyle="--", label="Lateral Profile (Z = 10 cm)")
+    ax_secondary = axs[1,1].twiny()
+    ax_secondary.plot(x_axis, lateral_profile, color="blue", linewidth=2, linestyle="--", label="Lateral Profile (Z = 10 cm)")
 
-    axs[1,1].set_title("Quantitative analysis (PDD and lateral profile")
+    axs[1,1].set_title("Quantitative analysis (PDD and lateral profile)")
     axs[1,1].set_xlabel("Depth Z (cm) [Red line]")
-    ax_secundary.set_xlabel("Lateral X (cm) [Blue Line]")
+    ax_secondary.set_xlabel("Lateral X (cm) [Blue Line]")
     axs[1,1].grid(True, linestyle="--", alpha=0.6)
 
     lines1, labels1 = axs[1,1].get_legend_handles_labels()
-    lines2, labels2 = ax_secundary.get_legend_handles_labels()
+    lines2, labels2 = ax_secondary.get_legend_handles_labels()
     axs[1,1].legend(lines1 + lines2, labels1 + labels2, loc="upper right")
 
     plt.show()
@@ -83,11 +83,11 @@ if __name__ == "__main__":
 
     print("Generating anatomic phantom...")
     if args.phantom == "lung":
-        pacient = ph.create_lung()
+        patient = ph.create_lung()
     elif args.phantom == "bone":
-        pacient = ph.create_bone()
+        patient = ph.create_bone()
     elif args.phantom == "water":
-        pacient = ph.water_phantom()
+        patient = ph.water_phantom()
     elif args.phantom == "ct":
         print(f"Reading DICOM file: {args.ct_path}")
         # DICOM -> HU
@@ -95,23 +95,23 @@ if __name__ == "__main__":
         # Adaptar a imagem à grelha do DoseEngine
         hu_matrix = ct.resize_to_grid(hu_matrix)
         # HU -> densidade relativa
-        pacient = density.hu_to_relative_density(hu_matrix)
+        patient = density.hu_to_relative_density(hu_matrix)
         
     elif args.phantom == "custom":
-        pacient = ph.create_custom()
-    pacient_baseline = ph.water_phantom()
+        patient = ph.create_custom()
+    patient_baseline = ph.water_phantom()
 
     print("Calculating primary transport (TERMA)...")
-    engine_terma = DoseEngine(pacient, model="simple")
+    engine_terma = DoseEngine(patient, model="simple")
     visual_terma = engine_terma.run()
 
-    print("Calculating secundary transport (Heterogeneous)...")
-    engine_dose = DoseEngine(pacient, model="pencil_beam")
+    print("Calculating secondary transport (Heterogeneous)...")
+    engine_dose = DoseEngine(patient, model="pencil_beam")
     final_dose = engine_dose.run()
 
     print("Calculating baseline transport (Homogeneous Water)...")
-    engine_water = DoseEngine(pacient_baseline, model="pencil_beam")
+    engine_water = DoseEngine(patient_baseline, model="pencil_beam")
     water_dose = engine_water.run()
 
     print("Generating visualization elements...")
-    plot_results(pacient, visual_terma, final_dose, water_dose, args.phantom)
+    plot_results(patient, visual_terma, final_dose, water_dose, args.phantom)
