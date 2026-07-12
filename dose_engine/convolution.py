@@ -4,10 +4,24 @@ from scipy.signal import convolve2d
 
 def convolve_terma(terma_matrix, kernel_matrix):
     """
-    Calcula a distribuição relativa de dose através da convolução
-    bidimensional entre o TERMA e o Dose Spread Kernel.
+    Calculates the relative dose distribution through a 2D
+    convolution between the TERMA matrix and the dose spread kernel.
 
-    Retorna a matriz de dose relativa com as mesmas dimensões do TERMA.
+    Parameters
+    ----------
+    terma_matrix: 2D relative TERMA distribution.
+
+    kernel_matrix: 2D normalized dose spread kernel.
+
+    Returns
+    -------
+    Relative dose matrix with the same shape as terma_matrix.
+
+    Notes
+    -----
+    The calculation assumes a spatially invariant kernel.
+    Values outside
+    the computational domain are treated as zero.
     """
     if terma_matrix.ndim != 2 or kernel_matrix.ndim != 2:
         raise ValueError("TERMA and kernel must both be 2D matrices.")
