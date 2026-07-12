@@ -8,8 +8,16 @@ from config import GRID
 
 def load_dicom_hu(filepath="slice.dcm"):
     """
-    Lê uma imagem CT em formato DICOM e converte os valores armazenados
-    para Unidades de Hounsfield (HU).
+    Reads a CT image in DICOM format and convert the stored pixel values
+    into Hounsfield Units (HU).
+
+    Parameters
+    ----------
+    filepath: Path to the DICOM file.
+
+    Returns
+    -------
+    2D CT matrix expressed in Hounsfield Units.
     """
 
     if not os.path.exists(filepath):
@@ -31,7 +39,19 @@ def load_dicom_hu(filepath="slice.dcm"):
 
 def resize_to_grid(matrix):
     """
-    Redimensiona uma matriz 2D para a grelha definida em config.py.
+    Resamples a 2D matrix to the computational grid defined
+    in config.py.
+
+    Linear interpolation estimates new voxel values from neighbouring values
+    in the original image.
+
+    Parameters
+    ----------
+    matrix: 2D matrix to be resampled.
+
+    Returns
+    -------
+    Resampled matrix with shape (GRID["nz"], GRID["nx"]).
     """
     original_lines, original_columns = matrix.shape
 
