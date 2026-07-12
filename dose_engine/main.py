@@ -14,6 +14,31 @@ import argparse
 
 
 def plot_results(density_matrix, TERMA_matrix, dose_matrix, water_dose_matrix, phantom_type="lung"):
+    """
+    Displays the main physical quantities produced by DoseEngine.
+
+    The figure contains:
+
+    - the relative density matrix;
+    - the relative TERMA distribution;
+    - the final relative dose distribution;
+    - central-axis and lateral dose profiles.
+
+    Parameters
+    ----------
+    density_matrix: 2D relative density matrix used in the calculation.
+
+    terma_matrix: 2D relative TERMA distribution.
+
+    dose_matrix: Final 2D relative dose distribution.
+
+    water_dose_matrix: Dose distribution calculated for a homogeneous water phantom,
+    used as a reference baseline.
+
+    phantom_type: Scenario being displayed. Used to highlight predefined lung or
+    bone regions in the depth-dose plot. Default is "lung".
+    """
+
     width_cm = GRID["nx"] * GRID["dx"]
     depth_cm = GRID["nz"] * GRID["dz"]
     extent = [0, width_cm, depth_cm, 0]
