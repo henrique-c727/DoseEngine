@@ -10,7 +10,6 @@ def convolve_terma(terma_matrix, kernel_matrix):
     Parameters
     ----------
     terma_matrix: 2D relative TERMA distribution.
-
     kernel_matrix: 2D normalized dose spread kernel.
 
     Returns
