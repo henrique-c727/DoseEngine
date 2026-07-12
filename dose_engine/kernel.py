@@ -35,9 +35,10 @@ def generate_kernel_2d(radius_cm = 3.0):
     z = np.arange(kernel_size) - center
     xx, zz = np.meshgrid(x, z)
 
+    # Converts the radial distance from pixels to centimeters.
     r = np.sqrt(xx**2 + zz**2) * GRID["dx"]
 
-
+    # Empirical double-exponential parameters
     A = 1.0
     a = 5.0
     B = 0.1
@@ -45,7 +46,7 @@ def generate_kernel_2d(radius_cm = 3.0):
 
     kernel = A * np.exp(-a * r) + B * np.exp(-b * r)
 
-
+    # Normalizes the kernel to preserve the total relative energy
     kernel = kernel / np.sum(kernel)
 
     return kernel
