@@ -1,4 +1,4 @@
-# Obter um ficheiro DICOM de exemplo da biblioteca pydicom
+# Code used to obtain an example DICOM file included in pydicom
 
 from pathlib import Path
 from shutil import copy2
@@ -13,4 +13,4 @@ target_path.parent.mkdir(parents=True, exist_ok=True)
 
 copy2(source_path, target_path)
 
-print(f"CT copiado para: {target_path.resolve()}")
+print(f"CT scan copied to: {target_path.resolve()}")
