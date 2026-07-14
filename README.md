@@ -134,7 +134,7 @@ where $T$ is the relative TERMA distribution and $$K$ is the dose spread kernel.
 
 ## Calculation Pipeline
 
-```text
+
 Phantom or DICOM CT
           │
           ▼
@@ -366,7 +366,7 @@ The current photon transport model uses a constant effective attenuation coeffic
 
 ## Interactive Demonstration
 
-The `demo.ipynb` notebook presents the calculation pipeline step by step, currently only available in portuguese and may be updated over time. 
+The `demo.ipynb` notebook presents the calculation pipeline step by step, currently only available in portuguese, but expected to change over time, including adding a translated version to english. 
 
 It can be used to inspect:
 
