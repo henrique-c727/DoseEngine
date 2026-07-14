@@ -1,4 +1,4 @@
-numpy
-scipy
-matplotlib
-pydicom
+numpy>=1.24,<3.0
+scipy>=1.10,<2.0
+matplotlib>=3.7,<4.0
+pydicom>=2.4,<4.0
