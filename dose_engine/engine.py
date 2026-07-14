@@ -82,10 +82,10 @@ class DoseEngine:
 
         elif self.model == "advanced":
             raise NotImplementedError(
-                "O modelo avançado ainda não foi implementado."
+                "The advanced model is not yet implemented"
             )
 
         else:
             raise ValueError(
-                f"Modelo físico '{self.model}' não reconhecido."
+                f"'{self.model}' physical model not recognized"
             )
