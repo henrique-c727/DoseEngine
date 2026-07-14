@@ -128,7 +128,7 @@ $$
 D(z,x) = T(z,x) * K(z,x)
 $$
 
-where $T$ is the relative TERMA distribution and $$K$ is the dose spread kernel.
+where $T$ is the relative TERMA distribution and $K$ is the dose spread kernel.
 
 ---
 
