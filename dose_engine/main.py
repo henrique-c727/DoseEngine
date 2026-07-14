@@ -117,9 +117,9 @@ if __name__ == "__main__":
         print(f"Reading DICOM file: {args.ct_path}")
         # DICOM -> HU
         hu_matrix = ct.load_dicom_hu(args.ct_path)
-        # Adaptar a imagem à grelha do DoseEngine
+        # Adapting image to the DoseEngine grid
         hu_matrix = ct.resize_to_grid(hu_matrix)
-        # HU -> densidade relativa
+        # HU -> relative density
         patient = density.hu_to_relative_density(hu_matrix)
         
     elif args.phantom == "custom":
