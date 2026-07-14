@@ -134,7 +134,7 @@ where $T$ is the relative TERMA distribution and $K$ is the dose spread kernel.
 
 ## Calculation Pipeline
 
-
+```text
 Phantom or DICOM CT
           │
           ▼
