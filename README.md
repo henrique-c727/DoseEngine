@@ -80,10 +80,7 @@ This relation is used exclusively for educational purposes and does not represen
 For a beam travelling along the positive depth axis, the accumulated radiological depth is calculated as:
 
 $$
-d_{\mathrm{eff}}(z,x)
-=
-\sum_{z'=0}^{z}
-\rho_{\mathrm{rel}}(z',x)\,\Delta z
+d_{\mathrm{eff}}(z,x) = \sum_{z'=0}^{z} \rho_{\mathrm{rel}}(z',x)\,\Delta z
 $$
 
 This produces a water-equivalent path length that accounts for density variations along each beam path.
@@ -93,13 +90,7 @@ This produces a water-equivalent path length that accounts for density variation
 Primary fluence is estimated using exponential attenuation:
 
 $$
-\Phi(z,x)
-=
-\Phi_0
-\exp\left[-\mu_{\mathrm{water}}d_{\mathrm{eff}}(z,x)\right]
-\left(
-\frac{SSD}{SSD+z}
-\right)^2
+\Phi(z,x) = \Phi_0 \exp\left[-\mu_{\mathrm{water}}d_{\mathrm{eff}}(z,x)\right] \left( \frac{SSD}{SSD+z} \right)^2
 $$
 
 The second factor represents the inverse-square reduction in fluence with increasing distance from the source.
@@ -119,13 +110,7 @@ In the current implementation, TERMA is a relative quantity and is not expressed
 
 Secondary energy transport is represented using an empirical isotropic kernel composed of two exponential terms:
 
-$$
-K(r)
-=
-A e^{-ar}
-+
-B e^{-br}
-$$
+$$ K(r) = A e^{-ar} + B e^{-br} $$
 
 The narrow component represents the central concentration of deposited energy, while the broader component produces a lower-amplitude tail.
 
