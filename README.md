@@ -62,16 +62,16 @@ The calculation medium can be generated from:
 
 For CT images, the stored pixel values are first converted into Hounsfield Units:
 
-\[
+$$
 HU = \text{pixel value} \times \text{RescaleSlope}
      + \text{RescaleIntercept}
-\]
+$$
 
 A simplified linear calibration is then used to estimate relative density:
 
-\[
+$$
 \rho_{\mathrm{rel}} = 1 + \frac{HU}{1000}
-\]
+$$
 
 This relation is used exclusively for educational purposes and does not represent a scanner-specific clinical calibration curve.
 
@@ -79,12 +79,12 @@ This relation is used exclusively for educational purposes and does not represen
 
 For a beam travelling along the positive depth axis, the accumulated radiological depth is calculated as:
 
-\[
+$$
 d_{\mathrm{eff}}(z,x)
 =
 \sum_{z'=0}^{z}
 \rho_{\mathrm{rel}}(z',x)\,\Delta z
-\]
+$$
 
 This produces a water-equivalent path length that accounts for density variations along each beam path.
 
@@ -92,7 +92,7 @@ This produces a water-equivalent path length that accounts for density variation
 
 Primary fluence is estimated using exponential attenuation:
 
-\[
+$$
 \Phi(z,x)
 =
 \Phi_0
@@ -100,7 +100,7 @@ Primary fluence is estimated using exponential attenuation:
 \left(
 \frac{SSD}{SSD+z}
 \right)^2
-\]
+$$
 
 The second factor represents the inverse-square reduction in fluence with increasing distance from the source.
 
@@ -108,10 +108,10 @@ The second factor represents the inverse-square reduction in fluence with increa
 
 The relative TERMA distribution is estimated as:
 
-\[
+$$
 T(z,x) \propto
 \mu_{\mathrm{water}}\Phi(z,x)
-\]
+$$
 
 In the current implementation, TERMA is a relative quantity and is not expressed in absolute energy or dose units.
 
@@ -119,31 +119,31 @@ In the current implementation, TERMA is a relative quantity and is not expressed
 
 Secondary energy transport is represented using an empirical isotropic kernel composed of two exponential terms:
 
-\[
+$$
 K(r)
 =
 A e^{-ar}
 +
 B e^{-br}
-\]
+$$
 
 The narrow component represents the central concentration of deposited energy, while the broader component produces a lower-amplitude tail.
 
 The kernel is normalized so that:
 
-\[
+$$
 \sum K = 1
-\]
+$$
 
 ### 6. Dose convolution
 
 The final relative dose distribution is obtained through the two-dimensional convolution:
 
-\[
+$$
 D(z,x) = T(z,x) * K(z,x)
-\]
+$$
 
-where \(T\) is the relative TERMA distribution and \(K\) is the dose spread kernel.
+where $T$ is the relative TERMA distribution and $$K$ is the dose spread kernel.
 
 ---
 
