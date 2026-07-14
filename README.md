@@ -163,7 +163,6 @@ Dose maps and profiles
 
 ## Repository Structure
 
-```text
 DoseEngine/
 ├── .gitignore
 ├── README.md                       # Project overview and documentation
