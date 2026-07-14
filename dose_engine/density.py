@@ -30,7 +30,7 @@ def hu_to_relative_density(hu_matrix):
     """
     density_matrix = (hu_matrix / 1000.0) + 1.0
 
-    # Limita valores extremos ou não físicos para esta demonstração.
+    # Limits extreme values
     density_matrix = np.clip(density_matrix, 0.0, 3.0)
 
     return density_matrix
